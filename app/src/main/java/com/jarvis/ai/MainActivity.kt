@@ -1,0 +1,176 @@
+
+package com.jarvis.ai
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            JarvisScreen()
+        }
+    }
+}
+
+@Composable
+fun JarvisScreen() {
+    var status by remember { mutableStateOf("SYSTEM ONLINE") }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+
+    val pulse by infiniteTransition.animateFloat(
+        initialValue = 0.85f,
+        targetValue = 1.15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "circle"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        Color(0xFF071421),
+                        Color(0xFF020609),
+                        Color.Black
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(24.dp)
+        ) {
+            Spacer(modifier = Modifier.height(35.dp))
+
+            Text(
+                text = "J.A.R.V.I.S",
+                color = Color(0xFF00D9FF),
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "PERSONAL AI ASSISTANT",
+                color = Color.Gray,
+                fontSize = 11.sp,
+                letterSpacing = 3.sp
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(280.dp)
+            ) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val center = this.center
+
+                    drawCircle(
+                        color = Color(0xFF00BFFF).copy(alpha = 0.12f),
+                        radius = size.minDimension / 2 * pulse
+                    )
+
+                    drawCircle(
+                        color = Color(0xFF00D9FF),
+                        radius = size.minDimension / 2 * 0.42f,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(
+                            width = 2.dp.toPx()
+                        )
+                    )
+
+                    drawCircle(
+                        color = Color(0xFF0088CC),
+                        radius = size.minDimension / 2 * 0.32f,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(
+                            width = 1.dp.toPx()
+                        )
+                    )
+
+                    drawCircle(
+                        color = Color(0xFF00D9FF),
+                        radius = 8.dp.toPx()
+                    )
+                }
+
+                Text(
+                    text = "J",
+                    color = Color.White,
+                    fontSize = 65.sp,
+                    fontWeight = FontWeight.Light
+                )
+            }
+
+            Spacer(modifier = Modifier.height(35.dp))
+
+            Text(
+                text = status,
+                color = Color(0xFF00D9FF),
+                fontSize = 15.sp,
+                letterSpacing = 2.sp
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Awaiting your command...",
+                color = Color.LightGray,
+                fontSize = 13.sp
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    status = "VOICE SYSTEM COMING SOON"
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(58.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF007FA8)
+                ),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Text(
+                    text = "ACTIVATE JARVIS",
+                    fontSize = 16.sp,
+                    letterSpacing = 2.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Text(
+                text = "JARVIS AI • VERSION 1.0",
+                color = Color.DarkGray,
+                fontSize = 11.sp
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
